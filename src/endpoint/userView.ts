@@ -7,6 +7,6 @@ router.get('/', UserController.getAll)
 .get('/:id', UserController.getById)
 .put('/:id', UserController.update)
 .delete('/:id', UserController.delete)
-.post('/product', UserController.create);
+.post('/', UserController.create);
 
 export default router;

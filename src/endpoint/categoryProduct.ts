@@ -7,6 +7,6 @@ router.get('/', CategoryProductController.getAll)
 .get('/:id', CategoryProductController.getById)
 .put('/:id', CategoryProductController.update)
 .delete('/:id', CategoryProductController.delete)
-.post('/category', CategoryProductController.create);
+.post('/', CategoryProductController.create);
 
 export default router;

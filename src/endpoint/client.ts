@@ -7,6 +7,6 @@ router.get('/', ClientController.getAll)
 .get('/:id', ClientController.getById)
 .put('/:id', ClientController.update)
 .delete('/:id', ClientController.delete)
-.post('/client', ClientController.create);
+.post('/', ClientController.create);
 
 export default router;

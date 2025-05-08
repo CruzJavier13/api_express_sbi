@@ -7,6 +7,6 @@ router.get('/', EmployeeController.getAll)
 .get('/:id', EmployeeController.getById)
 .put('/:id', EmployeeController.update)
 .delete('/:id', EmployeeController.delete)
-.post('/employee', EmployeeController.create);
+.post('/', EmployeeController.create);
 
 export default router;

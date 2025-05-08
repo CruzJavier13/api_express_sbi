@@ -1,26 +1,69 @@
 import { Request, Response } from "express";
+import { Product } from "../models/ProductModel";
 
 class ProductController{
     constructor(){}
 
     async getAll(req: Request, res: Response){
-        await res.status(200).json({message:'Get Product'});
+        try{
+            const data = await Product.find();
+            res.status(200).json({message:data});
+        }catch(err){
+            if(err instanceof Error){
+                res.status(500).json({message:err.message});
+            }
+        }
     }
 
     async getById(req: Request, res: Response){
-        await res.status(200).json({message:'Get Product for id'});
+        const {id} = req.params;
+        try{
+            const data = await Product.findOneBy({id:Number(id)});
+            res.status(200).json({message:data})
+        }catch(err){
+            if(err instanceof Error){
+                res.status(500).json({message:err.message});
+            }
+        }
     }
 
     async delete(req: Request, res: Response){
-        await res.status(200).json({message:'Delete Product'});
+        const {id} = req.params;
+        try{
+            const data = await Product.delete({id:Number(id)});
+            res.status(200).json({message:data});
+        }catch(err){
+            if(err instanceof Error){
+                res.status(500).json({message:err.message});
+            }
+        }
     }
 
     async update(req: Request, res: Response){
-        await res.status(200).json({message:'Update Product'});
+        const {id} = req.params;
+        try{
+            const data = await Product.findOneBy({id:Number(id)});
+            if(!data){
+                res.status(404).json({message:'Data not found'});
+            }
+            const updated = await Product.update({id:Number(id)}, req.body);
+            res.status(200).json({message:updated});
+        }catch(err){
+            if(err instanceof Error){
+                res.status(500).json({message:err.message});
+            }
+        }
     }
 
     async create(req: Request, res: Response){
-        await res.status(200).json({message:'Create Product'});
+        try{
+            const data = await Product.save(req.body);
+            res.status(200).json({message:data});
+        }catch(err){
+            if(err instanceof Error){
+                res.status(500).json({message:err.message});
+            }
+        }
     }
 }
 

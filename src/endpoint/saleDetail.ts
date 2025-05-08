@@ -7,6 +7,6 @@ router.get('/', SaleDetailController.getAll)
 .get('/:id', SaleDetailController.getById)
 .put('/:id', SaleDetailController.update)
 .delete('/:id', SaleDetailController.delete)
-.post('/product', SaleDetailController.create);
+.post('/', SaleDetailController.create);
 
 export default router;
