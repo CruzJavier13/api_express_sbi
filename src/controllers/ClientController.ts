@@ -1,13 +1,14 @@
 import { Request, Response } from "express";
 import { Client } from "../models/ClientModel";
-import { brotliDecompress } from "zlib";
+import { AppDataSource } from "../database/connection";
 
 class ClientController{
     constructor(){}
 
     async getAll(req: Request, res: Response){
         try{
-            const data = await Client.find();
+            const clientRepository = AppDataSource.getRepository(Client);
+            const data = await clientRepository.find();
             res.status(200).json({message:data});
         }catch(err){
             if(err instanceof Error){
@@ -19,7 +20,8 @@ class ClientController{
     async getById(req: Request, res: Response){
         const {id} = req.params;
         try{
-            const data = await Client.findOneBy({id:Number(id)});
+            const clientRepository = AppDataSource.getRepository(Client);
+            const data = await clientRepository.findOneBy({id:Number(id)});
             res.status(200).json({message:data});
         }catch(err){
             if(err instanceof Error){
@@ -31,7 +33,8 @@ class ClientController{
     async delete(req: Request, res: Response){
         const {id} = req.params;
         try{
-            const data = await Client.delete({id:Number(id)})
+            const clientRepository = AppDataSource.getRepository(Client);
+            const data = await clientRepository.update({id:Number(id)}, {state:false})
             res.status(200).json({message:data});
         }catch(err){
             if(err instanceof Error){
@@ -43,11 +46,12 @@ class ClientController{
     async update(req: Request, res: Response){
         const {id} = req.params;
         try{
-            const data = await Client.findOneBy({id:Number(id)});
+            const clientRepository = AppDataSource.getRepository(Client);
+            const data = await clientRepository.findOneBy({id:Number(id)});
             if(!data){
                 res.status(404).json({message:"Data not found"})
             }
-            const updated = await Client.update({id:Number(id)}, req.body);
+            const updated = await clientRepository.update({id:Number(id)}, req.body);
             res.status(200).json({message:'Update Client'});
         }catch(err){
             if(err instanceof Error){
@@ -58,7 +62,8 @@ class ClientController{
 
     async create(req: Request, res: Response){
         try{
-            const data = await Client.save(req.body);
+            const clientRepository = AppDataSource.getRepository(Client);
+            const data = await clientRepository.save(req.body);
             res.status(201).json({message:data});
         }catch(err){
             if(err instanceof Error){

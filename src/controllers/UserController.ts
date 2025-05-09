@@ -1,12 +1,14 @@
 import { Request, Response } from "express";
+import { AppDataSource } from "../database/connection";
 import { User } from "../models/UserModel";
 
 class UserController{
     constructor(){}
-
+    
     async getAll(req: Request, res: Response){
                 try{
-                    const data = await User.find();
+                    const userRepository = AppDataSource.getRepository(User);
+                    const data = (await userRepository.find()).filter((u)=>u.state==true);
                     res.status(200).json({message:data});
                 }catch(err){
                     if(err instanceof Error){
@@ -18,7 +20,8 @@ class UserController{
             async getById(req: Request, res: Response){
                 const {id} = req.params;
                 try{
-                    const data = await User.findOneBy({id:Number(id)});
+                    const userRepository = AppDataSource.getRepository(User);
+                    const data = await userRepository.findOneBy({id:Number(id), state:true});
                     res.status(200).json({message:data})
                 }catch(err){
                     if(err instanceof Error){
@@ -30,7 +33,12 @@ class UserController{
             async delete(req: Request, res: Response){
                 const {id} = req.params;
                 try{
-                    const data = await User.delete({id:Number(id)});
+                    const userRepository = AppDataSource.getRepository(User);
+                    const data:User | null = await userRepository.findOneBy({id:Number(id)});
+                    if(!data){
+                        res.status(404).json({message:"Not found"})
+                    }
+                    const deleted = await userRepository.update({id:Number(id)}, {state:false})
                     res.status(200).json({message:data});
                 }catch(err){
                     if(err instanceof Error){
@@ -42,11 +50,12 @@ class UserController{
             async update(req: Request, res: Response){
                 const {id} = req.params;
                 try{
-                    const data = await User.findOneBy({id:Number(id)});
+                    const userRepository = AppDataSource.getRepository(User);
+                    const data = await userRepository.findOneBy({id:Number(id)});
                     if(!data){
                         res.status(404).json({message:'Data not found'});
                     }
-                    const updated = await User.update({id:Number(id)}, req.body);
+                    const updated = await userRepository.update({id:Number(id)}, req.body);
                     res.status(200).json({message:updated});
                 }catch(err){
                     if(err instanceof Error){
@@ -57,7 +66,8 @@ class UserController{
         
             async create(req: Request, res: Response){
                 try{
-                    const data = await User.save(req.body);
+                    const userRepository = AppDataSource.getRepository(User);
+                    const data = await userRepository.save(req.body);
                     res.status(200).json({message:data});
                 }catch(err){
                     if(err instanceof Error){

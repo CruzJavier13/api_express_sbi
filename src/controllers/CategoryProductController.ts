@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { CategoryProduct } from "../models/CategoryProductModel";
+import { AppDataSource } from "../database/connection";
 
 class CategoryProductController{
     constructor(){}
@@ -17,7 +18,8 @@ class CategoryProductController{
     async getById(req: Request, res: Response){
         const {id} = req.params;
         try{
-            const data = await CategoryProduct.findOneBy({id:Number(id)});
+            const categoryProductRepository = AppDataSource.getRepository(CategoryProduct)
+            const data = await categoryProductRepository.findOneBy({id:Number(id)});
             res.status(200).json({message:data});
         }catch(err){
             if(err instanceof Error){
@@ -29,7 +31,8 @@ class CategoryProductController{
     async delete(req: Request, res: Response){
         const {id} = req.params;
         try{
-            const data = await CategoryProduct.delete({id:Number(id)});
+            const categoryProductRepository = AppDataSource.getRepository(CategoryProduct)
+            const data = await categoryProductRepository.update({id:Number(id)}, {state:false});
             res.status(200).json({message:data});
         }catch(err){
             if(err instanceof Error){
@@ -41,11 +44,12 @@ class CategoryProductController{
     async update(req: Request, res: Response){
         const {id} = req.params;
         try{
-            const data = await CategoryProduct.findOneBy({id:Number(id)});
+            const categoryProductRepository = AppDataSource.getRepository(CategoryProduct)
+            const data = await categoryProductRepository.update({id:Number(id)}, req.body);
             if(!data){
                 res.status(4004).json({message:"Data not found"});
             }
-            const updated = await CategoryProduct.update({id:Number(id)}, req.body);
+            const updated = await categoryProductRepository.update({id:Number(id)}, req.body);
             res.status(200).json({message:updated});
         }catch(err){
             if(err instanceof Error){
@@ -56,7 +60,8 @@ class CategoryProductController{
 
     async create(req: Request, res: Response){
         try{
-            const data = await CategoryProduct.save(req.body);
+            const categoryProductRepository = AppDataSource.getRepository(CategoryProduct)
+            const data = await categoryProductRepository.save(req.body);
             res.status(204).json({message:data});
         }catch(err){
             if(err instanceof Error){

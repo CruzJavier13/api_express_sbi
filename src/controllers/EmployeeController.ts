@@ -6,7 +6,8 @@ class EmployeeController{
     constructor(){}
     async getAll(req: Request, res: Response){
         try{
-            const data = await Employee.find();
+            const employeeRepository = AppDataSource.getRepository(Employee);
+            const data = await employeeRepository.find();
             res.status(200).json({data: data});
         }catch(err){
             if(err instanceof Error)
@@ -16,8 +17,9 @@ class EmployeeController{
 
     async getById(req: Request, res: Response){
         try{
-            const {id} = req.params
-            const data = await Employee.findOneBy({id:Number(id)});
+            const {id} = req.params;
+            const employeeRepository = AppDataSource.getRepository(Employee);
+            const data = await employeeRepository.findOneBy({id:Number(id)});
             res.status(200).json({data: data});
         }catch(err){
             if(err instanceof Error)
@@ -27,8 +29,9 @@ class EmployeeController{
 
     async delete(req: Request, res: Response){
         try{
-            const {id} = req.params
-            const data = await Employee.delete({id:Number(id)});
+            const {id} = req.params;
+            const employeeRepository = AppDataSource.getRepository(Employee);
+            const data = await employeeRepository.update({id:Number(id)}, {state:false});
             res.status(200).json({data: data});
         }catch(err){
             if(err instanceof Error)
@@ -37,13 +40,14 @@ class EmployeeController{
     }
 
     async update(req: Request, res: Response){
+        const {id} = req.params;
         try{
-            const data = await Employee.findOneBy({id:Number(req.params)});
+            const employeeRepository = AppDataSource.getRepository(Employee);
+            const data = await employeeRepository.findOneBy({id:Number(id)});
             if(!data){
                 res.status(404).json({message:"Data not found"});
             }
-            await Employee.update({id:Number(req.params)}, req.body);
-            const updated = await Employee.findOneBy({id:Number(req.params)});
+            const updated = await employeeRepository.update({id:Number(req.params)}, req.body);
             res.status(200).json({data: updated});
         }catch(err){
             if(err instanceof Error)
@@ -53,7 +57,8 @@ class EmployeeController{
 
     async create(req: Request, res: Response){
         try{
-            const data = await Employee.save(req.body);
+            const employeeRepository = AppDataSource.getRepository(Employee);
+            const data = await employeeRepository.save(req.body);
             res.status(201).json({message:data})
         }catch(err){
             if(err instanceof Error){

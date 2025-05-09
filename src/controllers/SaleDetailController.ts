@@ -1,12 +1,14 @@
 import { Request, Response } from "express";
 import { SaleDetail } from "../models/SaleDetailModel";
+import { AppDataSource } from "../database/connection";
 
 class SaleDetailController{
     constructor(){}
 
     async getAll(req: Request, res: Response){
             try{
-                const data = await SaleDetail.find();
+                const saleDetailRepository = AppDataSource.getRepository(SaleDetail);
+                const data = await saleDetailRepository.find();
                 res.status(200).json({message:data});
             }catch(err){
                 if(err instanceof Error){
@@ -18,7 +20,8 @@ class SaleDetailController{
         async getById(req: Request, res: Response){
             const {id} = req.params;
             try{
-                const data = await SaleDetail.findOneBy({id:Number(id)});
+                const saleDetailRepository = AppDataSource.getRepository(SaleDetail);
+                const data = await saleDetailRepository.findOneBy({id:Number(id)});
                 res.status(200).json({message:data})
             }catch(err){
                 if(err instanceof Error){
@@ -30,7 +33,8 @@ class SaleDetailController{
         async delete(req: Request, res: Response){
             const {id} = req.params;
             try{
-                const data = await SaleDetail.delete({id:Number(id)});
+                const saleDetailRepository = AppDataSource.getRepository(SaleDetail);
+                const data = await saleDetailRepository.update({id:Number(id)}, {state:false});
                 res.status(200).json({message:data});
             }catch(err){
                 if(err instanceof Error){
@@ -42,11 +46,12 @@ class SaleDetailController{
         async update(req: Request, res: Response){
             const {id} = req.params;
             try{
-                const data = await SaleDetail.findOneBy({id:Number(id)});
+                const saleDetailRepository = AppDataSource.getRepository(SaleDetail);
+                const data = await saleDetailRepository.findOneBy({id:Number(id)});
                 if(!data){
                     res.status(404).json({message:'Data not found'});
                 }
-                const updated = await SaleDetail.update({id:Number(id)}, req.body);
+                const updated = await saleDetailRepository.update({id:Number(id)}, req.body);
                 res.status(200).json({message:updated});
             }catch(err){
                 if(err instanceof Error){
@@ -57,7 +62,8 @@ class SaleDetailController{
     
         async create(req: Request, res: Response){
             try{
-                const data = await SaleDetail.save(req.body);
+                const saleDetailRepository = AppDataSource.getRepository(SaleDetail);
+                const data = await saleDetailRepository.save(req.body);
                 res.status(200).json({message:data});
             }catch(err){
                 if(err instanceof Error){
