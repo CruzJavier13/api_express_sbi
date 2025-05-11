@@ -6,7 +6,7 @@ export class FormPay extends BaseEntity{
     id: number;
 
     @Column()
-    state: Boolean;
+    state: boolean;
 
     @Column()
     form: String;

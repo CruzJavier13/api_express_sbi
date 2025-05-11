@@ -10,7 +10,7 @@ export class Post extends BaseEntity{
     id: number;
 
     @Column()
-    state: Boolean;
+    state: boolean;
 
     @OneToOne(()=>Employee, (employee)=>employee.id)
     @JoinTable()

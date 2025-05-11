@@ -7,7 +7,7 @@ export class User extends BaseEntity{
     id: number;
 
     @Column()
-    state: Boolean;
+    state: boolean;
 
     @Column()
     username: String;

@@ -12,7 +12,7 @@ export class SaleDetail extends BaseEntity{
     id: number;
 
     @Column()
-    state: Boolean;
+    state: boolean;
 
     @ManyToMany(()=>Product)
     @JoinTable()

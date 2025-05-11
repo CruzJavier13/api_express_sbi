@@ -7,7 +7,7 @@ export class Employee extends BaseEntity{
     id: number;
 
     @Column()
-    state: Boolean;
+    state: boolean;
 
     @Column()
     firstname: string;

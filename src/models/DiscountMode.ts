@@ -7,7 +7,7 @@ export class Discount extends BaseEntity{
     id: number;
     
     @Column()
-    state: Boolean;
+    state: boolean;
     
     @Column('decimal',{ precision: 10, scale: 2 })
     discount: number;

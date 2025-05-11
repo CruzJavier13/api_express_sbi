@@ -7,7 +7,7 @@ export class Sale extends BaseEntity{
     id: number;
 
     @Column()
-    state: Boolean;
+    state: boolean;
 
     @ManyToMany(()=> SaleDetail, (detail)=> detail.sale)
     detail: SaleDetail[];

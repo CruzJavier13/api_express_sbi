@@ -6,6 +6,7 @@ import product from '../endpoint/product';
 import sale from '../endpoint/sale';
 import saleDetail from '../endpoint/saleDetail';
 import user from '../endpoint/userView';
+import supplier from '../endpoint/supplier';
 
 const app = express();
 
@@ -16,5 +17,6 @@ app.use('/product', product);
 app.use('/sale', sale);
 app.use('/saleDetail', saleDetail);
 app.use('/user', user);
+app.use('/supplier', supplier)
 
 export default app;

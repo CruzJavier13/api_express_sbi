@@ -1,25 +1,27 @@
 import { Request, Response } from "express";
-import { CategoryProduct } from "../models/CategoryProductModel";
+import { Supplier } from "../models/SupplierModel";
 import { AppDataSource } from "../database/connection";
 
-class CategoryProductController{
+class SupplierController{
     constructor(){}
 
     async getAll(req: Request, res: Response){
         try{
-            const data = await CategoryProduct.find();
+            const supplierRepository = AppDataSource.getRepository(Supplier);
+            const data = (await supplierRepository.find()).filter((supplier)=>supplier.state==true);
             res.status(200).json({message:data});
         }catch(err){
-            if(err instanceof Error)
+            if(err instanceof Error){
                 res.status(500).json({message:err.message});
+            }
         }
     }
 
     async getById(req: Request, res: Response){
         const {id} = req.params;
         try{
-            const categoryProductRepository = AppDataSource.getRepository(CategoryProduct)
-            const data = await categoryProductRepository.findOneBy({id:Number(id)});
+            const supplierRepository = AppDataSource.getRepository(Supplier);
+            const data = await supplierRepository.findOneBy({id:Number(id)});
             res.status(200).json({message:data});
         }catch(err){
             if(err instanceof Error){
@@ -31,8 +33,8 @@ class CategoryProductController{
     async delete(req: Request, res: Response){
         const {id} = req.params;
         try{
-            const categoryProductRepository = AppDataSource.getRepository(CategoryProduct)
-            const data = await categoryProductRepository.update({id:Number(id)}, {state:false});
+            const supplierRepository = AppDataSource.getRepository(Supplier);
+            const data = await supplierRepository.update({id:Number(id)}, {state:false})
             res.status(200).json({message:data});
         }catch(err){
             if(err instanceof Error){
@@ -44,12 +46,12 @@ class CategoryProductController{
     async update(req: Request, res: Response){
         const {id} = req.params;
         try{
-            const categoryProductRepository = AppDataSource.getRepository(CategoryProduct)
-            const data = await categoryProductRepository.update({id:Number(id)}, req.body);
+            const supplierRepository = AppDataSource.getRepository(Supplier);
+            const data = await supplierRepository.findOneBy({id:Number(id)});
             if(!data){
-                res.status(4004).json({message:"Data not found"});
+                res.status(404).json({message:"Data not found"})
             }
-            const updated = await categoryProductRepository.update({id:Number(id)}, req.body);
+            const updated = await supplierRepository.update({id:Number(id)}, req.body);
             res.status(200).json({message:updated});
         }catch(err){
             if(err instanceof Error){
@@ -60,8 +62,8 @@ class CategoryProductController{
 
     async create(req: Request, res: Response){
         try{
-            const categoryProductRepository = AppDataSource.getRepository(CategoryProduct)
-            const data = await categoryProductRepository.save(req.body);
+            const supplierRepository = AppDataSource.getRepository(Supplier);
+            const data = await supplierRepository.save(req.body);
             res.status(201).json({message:data});
         }catch(err){
             if(err instanceof Error){
@@ -71,4 +73,4 @@ class CategoryProductController{
     }
 }
 
-export default new CategoryProductController();
+export default new SupplierController();

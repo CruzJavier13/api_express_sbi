@@ -1,59 +1,69 @@
-import { OneToMany, ManyToOne, CreateDateColumn, UpdateDateColumn, Column, BaseEntity, Entity, PrimaryGeneratedColumn, Decimal128 } from "typeorm";
+import { 
+    Entity, 
+    PrimaryGeneratedColumn, 
+    Column, 
+    ManyToOne,
+    CreateDateColumn, 
+    UpdateDateColumn,
+    BaseEntity,
+    JoinColumn
+} from "typeorm";
 import { CategoryProduct } from "./CategoryProductModel";
 import { Supplier } from "./SupplierModel";
 
 @Entity('tbl_product')
-export class Product extends BaseEntity{
+export class Product extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column()
-    state: Boolean;
+    @Column({ default: true })
+    state: boolean; // Tipo primitivo
 
     @Column()
-    name:String;
+    name: string;
 
     @Column()
-    brand:String;
+    brand: string;
 
     @Column()
-    code:String;
+    code: string;
+
+    @Column({ nullable: true }) // Permite valores nulos
+    image: string;
+
+    @Column('text', { nullable: true })
+    description: string;
 
     @Column()
-    image:String;
+    presentation: string;
 
-    @Column('text')
-    description: String;
-
-    @Column()
-    presentation:String;
-
-    //Decimal to represent money value
     @Column({
         type: 'decimal',
-        precision: 20,  // Máximo de dígitos totales (enteros + decimales)
-        scale: 4,       // 4 dígitos decimales (ej: $123.4567)
+        precision: 20,
+        scale: 4,
         transformer: {
-            to(value: number): string {
-                return value.toString();
+            to(value: number | null): string | null {
+                return value?.toString() ?? null;
             },
-            from(value: string): number {
-                return parseFloat(value);
+            from(value: string | null): number | null {
+                return value ? parseFloat(value) : null;
             }
-        }
+        },
+        nullable: false // Obligatorio
     })
-    price: Decimal128;
+    price: number;
 
-    @OneToMany(() => Supplier, (supplier)=> supplier.product)
-    supplier:Supplier;
+    @ManyToOne(() => Supplier, (supplier) => supplier.product)
+    //@JoinColumn({ name: 'supplier_id' })
+    supplier: Supplier;
 
-    @ManyToOne(()=>CategoryProduct, (category)=> category.product)
+    @ManyToOne(() => CategoryProduct, category => category.product)
+    //@JoinColumn({ name: 'category_id' })
     category: CategoryProduct;
 
-    @CreateDateColumn()
+    @CreateDateColumn({ name: 'create_at' })
     createAt: Date;
     
-    @UpdateDateColumn()
+    @UpdateDateColumn({ name: 'update_at' })
     updateAt: Date;
-
 }

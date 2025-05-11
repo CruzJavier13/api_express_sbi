@@ -8,7 +8,7 @@ export class Supplier extends BaseEntity{
     id: number;
 
     @Column()
-    state: Boolean;
+    state: boolean;
 
     @Column()
     name: String;
