@@ -17,8 +17,7 @@ export class Product extends BaseEntity {
     id: number;
 
     @Column({ default: true })
-    state: boolean; // Tipo primitivo
-
+    state: boolean; // allow type
     @Column()
     name: string;
 
@@ -28,7 +27,7 @@ export class Product extends BaseEntity {
     @Column()
     code: string;
 
-    @Column({ nullable: true }) // Permite valores nulos
+    @Column({ nullable: true }) // allow null value
     image: string;
 
     @Column('text', { nullable: true })

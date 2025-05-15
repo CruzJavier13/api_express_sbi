@@ -1,4 +1,4 @@
-import { Column, BaseEntity, Entity, PrimaryGeneratedColumn, ManyToMany, Decimal128 } from "typeorm";
+import { Column, BaseEntity, Entity, PrimaryGeneratedColumn, ManyToMany, Decimal128, OneToMany } from "typeorm";
 import { SaleDetail } from "./SaleDetailModel";
 
 @Entity('tbl_sale')
@@ -9,7 +9,7 @@ export class Sale extends BaseEntity{
     @Column()
     state: boolean;
 
-    @ManyToMany(()=> SaleDetail, (detail)=> detail.sale)
+    @OneToMany(()=> SaleDetail, (detail)=> detail.sale)
     detail: SaleDetail[];
 
     @Column()

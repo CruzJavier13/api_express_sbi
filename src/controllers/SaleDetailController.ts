@@ -5,6 +5,23 @@ import { AppDataSource } from "../database/connection";
 class SaleDetailController{
     constructor(){}
 
+    async getDetail(req:Request, res:Response){
+            try{
+                const query = await SaleDetail.createQueryBuilder("saleDetail")
+                .leftJoinAndSelect("saleDetail.product", "Product")
+                .innerJoin('saleDetail.sale', 'sale')
+                //.innerJoinAndSelect("Product", "SaleDetail")
+                .where("saleDetail.id = :detail", { detail: Number(req.params.detail) })
+                .getOne();
+                
+                res.status(200).json({message:query});
+            }catch(err){
+                if(err instanceof Error){
+                    res.status(500).json({message:err})
+                }
+            }
+        }
+
     async getAll(req: Request, res: Response){
             try{
                 const saleDetailRepository = AppDataSource.getRepository(SaleDetail);

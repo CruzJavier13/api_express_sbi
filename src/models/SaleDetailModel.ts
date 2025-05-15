@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import { Column, BaseEntity, Entity, PrimaryGeneratedColumn, ManyToMany, JoinColumn, JoinTable, OneToOne, OneToMany, CreateDateColumn, UpdateDateColumn, Decimal128 } from "typeorm";
+import { Column, BaseEntity, Entity, PrimaryGeneratedColumn, ManyToMany, JoinColumn, JoinTable, OneToOne, OneToMany, CreateDateColumn, UpdateDateColumn, Decimal128, ManyToOne } from "typeorm";
 import { Product } from "./ProductModel";
 import { FormPay } from "./FormPayModel";
 import { Discount } from "./DiscountMode";
@@ -38,8 +38,10 @@ export class SaleDetail extends BaseEntity{
     @JoinTable()
     client:Client;
 
-    @ManyToMany(()=>Sale, (sale)=>sale.detail)
-    sale:Sale[];
+    @ManyToOne(()=>Sale, 
+    (sale)=>sale.detail)
+    @JoinColumn()
+    sale:Sale;
 
     @CreateDateColumn()
     createAt: Date;
